@@ -8,7 +8,7 @@ load_dotenv()
 # Get the API key from the environment variable
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
-def generate_text(prompt, model="gpt-4", max_tokens=150):
+def generate_text(prompt, model="gpt-3.5-turbo", max_tokens=150):
     try:
         response = openai.ChatCompletion.create(
             model=model,
