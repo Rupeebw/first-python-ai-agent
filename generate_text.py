@@ -1,6 +1,6 @@
 import openai
 from dotenv import load_dotenv
-import os  # Make sure this line is included to import the 'os' module
+import os  # Ensure the 'os' module is imported
 
 # Load environment variables from .env file
 load_dotenv()
@@ -8,21 +8,21 @@ load_dotenv()
 # Get the API key from the environment variable
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
-def generate_text(prompt, model="gpt-3.5-turbo", max_tokens=150):
+def generate_text(prompt, model="gpt-3.5-turbo", system_prompt=None):
     try:
+        if system_prompt:
+            # If a system prompt is provided, prepend it to the prompt
+            prompt = f"{system_prompt}\n\n{prompt}"
+        
+        # Call the OpenAI API to generate the response
         response = openai.ChatCompletion.create(
             model=model,
             messages=[
-                {"role": "system", "content": "You are a helpful assistant."},
+                {"role": "system", "content": system_prompt} if system_prompt else {"role": "system", "content": ""},
                 {"role": "user", "content": prompt}
-            ],
-            max_tokens=max_tokens,
-            n=1,
-            stop=None,
-            temperature=0.7,
+            ]
         )
 
-        # Extract the generated text from the response
         return response['choices'][0]['message']['content'].strip()
 
     except Exception as e:
