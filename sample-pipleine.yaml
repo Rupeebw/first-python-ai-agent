@@ -1,0 +1,37 @@
+stages:
+  - build
+  - test
+  - deploy
+
+# Build Stage
+build:
+  stage: build
+  script:
+    - echo "Building the application..."
+    - npm install
+    - npm run build
+  artifacts:
+    paths:
+      - build/
+    expire_in: 1 week
+
+# Test Stage
+test:
+  stage: test
+  script:
+    - echo "Running tests..."
+    - npm run test
+  dependencies:
+    - build
+
+# Deploy Stage
+deploy:
+  stage: deploy
+  script:
+    - echo "Deploying the application..."
+    - gsutil -m cp -r build/* gs://your-bucket-name
+  dependencies:
+    - build
+  environment:
+    name: production
+    url: https://www.your-domain.com
